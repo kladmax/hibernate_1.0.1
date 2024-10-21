@@ -1,19 +1,27 @@
 use std::process::Command;
 
 fn main() {
-    // Шлях до вашого bat-файлу
-    let bat_file = "hibernate.bat";
-
-    // Запуск bat-файлу
+    // Включаємо режим гібернації
     let output = Command::new("cmd")
-        .args(&["/C", bat_file])
+        .args(&["/C", "powercfg -hibernate on"])
         .output()
-        .expect("failed to execute bat file");
+        .expect("Failed to execute command");
 
-    // Вивести результат виконання
     if output.status.success() {
-        println!("Hibernate script executed successfully.");
+        println!("Hibernation enabled successfully.");
     } else {
-        eprintln!("Failed to execute hibernate script.");
+        eprintln!("Failed to enable hibernation.");
+    }
+
+    // Виконуємо команду для гібернації
+    let output = Command::new("cmd")
+        .args(&["/C", "shutdown /h"])
+        .output()
+        .expect("Failed to execute command");
+
+    if output.status.success() {
+        println!("System hibernating...");
+    } else {
+        eprintln!("Failed to hibernate system.");
     }
 }
